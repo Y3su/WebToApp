@@ -26,3 +26,11 @@ updates:
     groups:
       github-actions:
         patterns: ["*"]
+
+  - package-ecosystem: cargo
+    directory: /runtimes/desktop/src-tauri
+    schedule:
+      interval: weekly
+    groups:
+      desktop-rust-dependencies:
+        patterns: ["*"]
