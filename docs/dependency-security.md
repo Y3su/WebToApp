@@ -16,6 +16,11 @@ Reviewed 2026-09-06 after the first public dependency scan.
   a fresh Linux runner. Unrecognized license expressions fail closed. Run on
   each release target; this does not replace distribution notices,
   target-specific SBOMs or Rust/native license review.
+- The Next.js image stack includes sharp/libvips. Linux libvips packages declare
+  LGPL-3.0-or-later separately from the Apache-2.0 wrapper; the gate records a
+  package-scoped exception for `@img/sharp-libvips-*`. Preserve their upstream
+  license, copyright and source/relinking materials when distributing binaries.
+  The project's Apache-2.0 license does not relicense third-party components.
 
 ## Open Linux dependency finding
 

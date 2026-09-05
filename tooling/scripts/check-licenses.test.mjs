@@ -7,6 +7,7 @@ test("permits existing permissive and reviewed LGPL expressions", () => {
     new Map([
       ["example@1", "Apache-2.0 OR MIT"],
       ["image@1", "Apache-2.0 AND LGPL-3.0-or-later"],
+      ["@img/sharp-libvips-linux-x64@1.3.3", "LGPL-3.0-or-later"],
     ]),
   );
 });
@@ -18,6 +19,7 @@ test("rejects disallowed and unknown license declarations", () => {
     "BUSL-1.1",
     "UNLICENSED",
     "UNKNOWN",
+    "LGPL-3.0-or-later",
     "Proprietary",
     "MIT OR Custom-License",
     "",

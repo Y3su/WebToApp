@@ -59,7 +59,14 @@ export function checkLicenses(packages) {
     "Python-2.0",
     "Unlicense",
   ]);
-  const denied = [...packages].filter(([, license]) => !reviewed.has(license));
+  const denied = [...packages].filter(([name, license]) => {
+    // sharp's Linux prebuilt libvips declares LGPL separately from the wrapper.
+    // Keep this exception package-scoped; other LGPL additions require review.
+    const sharpLibvips =
+      /^@img\/sharp-libvips-[a-z0-9-]+@/.test(name) &&
+      license === "LGPL-3.0-or-later";
+    return !reviewed.has(license) && !sharpLibvips;
+  });
   if (denied.length > 0) {
     throw new Error(
       `Disallowed or unknown dependency licenses: ${denied.map(([name, license]) => `${name}: ${license}`).join(", ")}`,
