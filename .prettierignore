@@ -1,0 +1,10 @@
+node_modules
+.next
+.turbo
+coverage
+dist
+target
+runtimes/desktop/src-tauri/gen
+pnpm-lock.yaml
+LICENSE
+*.min.js

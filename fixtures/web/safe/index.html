@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#162238" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <title>Fixture Notes</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, sans-serif;
+      }
+      body {
+        margin: 0;
+        background: #f5f7fb;
+        color: #162238;
+      }
+      main {
+        width: min(42rem, calc(100% - 2rem));
+        margin: 4rem auto;
+      }
+      article {
+        padding: 1.5rem;
+        border-radius: 1rem;
+        background: white;
+        box-shadow: 0 0.5rem 2rem #1622381a;
+      }
+      button {
+        min-height: 2.75rem;
+        padding: 0 1rem;
+        border: 0;
+        border-radius: 0.6rem;
+        background: #315ee7;
+        color: white;
+        font: inherit;
+      }
+      #status {
+        min-height: 1.5rem;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #101725;
+          color: #f7f9ff;
+        }
+        article {
+          background: #162238;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <article>
+        <h1>Fixture Notes</h1>
+        <p>
+          A responsive, same-origin test application with no native assumptions.
+        </p>
+        <button id="save" type="button">Save note locally</button>
+        <p id="status" role="status" aria-live="polite"></p>
+      </article>
+    </main>
+    <script type="module">
+      const button = document.querySelector("#save");
+      const status = document.querySelector("#status");
+      button?.addEventListener("click", () => {
+        localStorage.setItem("fixture-note", new Date().toISOString());
+        if (status) status.textContent = "Saved in browser storage.";
+      });
+    </script>
+  </body>
+</html>

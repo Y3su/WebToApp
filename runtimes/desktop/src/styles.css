@@ -1,0 +1,40 @@
+:root {
+  color: #eef4f2;
+  background: #090b10;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  display: grid;
+  min-height: 100vh;
+  margin: 0;
+  place-items: center;
+}
+
+main {
+  max-width: 30rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.mark {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1.5rem;
+  place-items: center;
+  color: #041c15;
+  font-weight: 800;
+  background: #77e4bd;
+  border-radius: 0.8rem;
+}
+
+h1 {
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+}
+
+p {
+  color: #a7b0c0;
+  line-height: 1.5;
+}

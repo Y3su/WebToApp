@@ -1,0 +1,23 @@
+{
+  "description": "Inert metadata only; these names are never materialized on disk.",
+  "entries": [
+    { "name": "index.html", "kind": "file", "uncompressedBytes": 128 },
+    { "name": "../outside.txt", "kind": "file", "uncompressedBytes": 8 },
+    { "name": "/absolute/config.json", "kind": "file", "uncompressedBytes": 8 },
+    {
+      "name": "C:\\absolute\\secret.txt",
+      "kind": "file",
+      "uncompressedBytes": 8
+    },
+    {
+      "name": "assets/../index.html",
+      "kind": "file",
+      "uncompressedBytes": 128
+    },
+    {
+      "name": "linked-index.html",
+      "kind": "symlink",
+      "target": "../index.html"
+    }
+  ]
+}

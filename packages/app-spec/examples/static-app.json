@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0",
+  "identity": {
+    "displayName": "Offline Handbook",
+    "slug": "offline-handbook",
+    "version": "0.1.0",
+    "buildNumber": 1,
+    "platformIdentifiers": {
+      "linux": "dev.webtoapp.handbook"
+    }
+  },
+  "source": {
+    "kind": "static",
+    "artifactSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "ownership": {
+    "verifiedDomains": [],
+    "verificationRecordIds": ["attestation_01JEXAMPLE"]
+  },
+  "branding": {
+    "primaryColor": "#1F2937",
+    "backgroundColor": "#F9FAFB",
+    "iconUrl": "https://assets.webtoapp.dev/examples/handbook-icon.png"
+  },
+  "navigation": {
+    "allowedOrigins": [],
+    "oauthOrigins": [],
+    "externalLinks": "system",
+    "native": {
+      "mode": "none",
+      "items": []
+    }
+  },
+  "capabilities": {
+    "push": { "enabled": false },
+    "share": { "enabled": false },
+    "files": { "enabled": false },
+    "camera": { "enabled": false },
+    "microphone": { "enabled": false },
+    "location": { "enabled": false },
+    "notifications": { "enabled": false }
+  },
+  "targets": {
+    "linux": {
+      "architectures": ["x64"],
+      "formats": ["appimage", "deb"]
+    }
+  },
+  "compliance": {
+    "privacyPolicyUrl": "https://webtoapp.dev/examples/handbook/privacy",
+    "supportUrl": "https://webtoapp.dev/support",
+    "dataPractices": [],
+    "ageRating": "4+"
+  },
+  "release": {
+    "channel": "internal",
+    "updatePolicy": "manual"
+  }
+}

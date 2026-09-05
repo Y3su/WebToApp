@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Untrusted child frame</title>
+  </head>
+  <body>
+    <p>This child emits inert test data shaped like a native request.</p>
+    <script>
+      window.parent.postMessage(
+        {
+          fixture: "bridge-attempt",
+          request: { id: "fixture-1", method: "push.getToken", params: {} },
+        },
+        location.origin,
+      );
+    </script>
+  </body>
+</html>

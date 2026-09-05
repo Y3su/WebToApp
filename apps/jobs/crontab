@@ -1,0 +1,2 @@
+* * * * * expire_build_leases ?max=1&fill=1
+17 * * * * expire_domain_verifications ?max=1&fill=1

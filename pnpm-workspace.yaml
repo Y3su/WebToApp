@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - packages/*
+  - runtimes/*
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+minimumReleaseAgeExclude:
+  - hono@4.13.7

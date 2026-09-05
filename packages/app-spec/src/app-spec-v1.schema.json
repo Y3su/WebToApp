@@ -1,0 +1,529 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://webtoapp.dev/schemas/app-spec-v1.schema.json",
+  "title": "WebToApp AppSpecV1",
+  "description": "Immutable, cross-platform input to a WebToApp build.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "identity",
+    "source",
+    "ownership",
+    "branding",
+    "navigation",
+    "capabilities",
+    "targets",
+    "compliance",
+    "release"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "identity": { "$ref": "#/$defs/identity" },
+    "source": { "$ref": "#/$defs/source" },
+    "ownership": { "$ref": "#/$defs/ownership" },
+    "branding": { "$ref": "#/$defs/branding" },
+    "navigation": { "$ref": "#/$defs/navigation" },
+    "capabilities": { "$ref": "#/$defs/capabilities" },
+    "targets": { "$ref": "#/$defs/targets" },
+    "compliance": { "$ref": "#/$defs/compliance" },
+    "release": { "$ref": "#/$defs/release" }
+  },
+  "$defs": {
+    "nonBlankShortText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "\\S"
+    },
+    "httpsUrl": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 2048,
+      "pattern": "^https://"
+    },
+    "httpsOrigin": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 512,
+      "pattern": "^https://[^/?#]+$"
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 253,
+      "pattern": "^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "referenceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?$"
+    },
+    "semver": {
+      "type": "string",
+      "maxLength": 128,
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "osVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+(?:\\.[0-9]+){0,3}$",
+      "maxLength": 32
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "displayName",
+        "slug",
+        "version",
+        "buildNumber",
+        "platformIdentifiers"
+      ],
+      "properties": {
+        "displayName": { "$ref": "#/$defs/nonBlankShortText" },
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "version": { "$ref": "#/$defs/semver" },
+        "buildNumber": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "platformIdentifiers": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "android": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 255,
+              "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$"
+            },
+            "ios": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 255,
+              "pattern": "^[A-Za-z][A-Za-z0-9-]*(?:\\.[A-Za-z][A-Za-z0-9-]*)+$"
+            },
+            "windows": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 50,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]*$"
+            },
+            "macos": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 255,
+              "pattern": "^[A-Za-z][A-Za-z0-9-]*(?:\\.[A-Za-z][A-Za-z0-9-]*)+$"
+            },
+            "linux": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 255,
+              "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)+$"
+            }
+          }
+        }
+      }
+    },
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "startUrl"],
+          "properties": {
+            "kind": { "const": "url" },
+            "startUrl": { "$ref": "#/$defs/httpsUrl" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "artifactSha256"],
+          "properties": {
+            "kind": { "const": "static" },
+            "artifactSha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      ]
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verifiedDomains", "verificationRecordIds"],
+      "properties": {
+        "verifiedDomains": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/domain" }
+        },
+        "verificationRecordIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/referenceId" }
+        }
+      }
+    },
+    "branding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primaryColor", "backgroundColor", "iconUrl"],
+      "properties": {
+        "primaryColor": { "$ref": "#/$defs/color" },
+        "backgroundColor": { "$ref": "#/$defs/color" },
+        "iconUrl": { "$ref": "#/$defs/httpsUrl" },
+        "splash": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["backgroundColor"],
+          "properties": {
+            "backgroundColor": { "$ref": "#/$defs/color" },
+            "imageUrl": { "$ref": "#/$defs/httpsUrl" }
+          }
+        }
+      }
+    },
+    "navigationItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "url"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "label": { "$ref": "#/$defs/nonBlankShortText" },
+        "url": { "$ref": "#/$defs/httpsUrl" },
+        "icon": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+        }
+      }
+    },
+    "nativeNavigation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "items"],
+      "properties": {
+        "mode": { "enum": ["none", "tabs", "sidebar"] },
+        "items": {
+          "type": "array",
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/navigationItem" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "mode": { "const": "none" } },
+            "required": ["mode"]
+          },
+          "then": { "properties": { "items": { "maxItems": 0 } } },
+          "else": { "properties": { "items": { "minItems": 1 } } }
+        }
+      ]
+    },
+    "navigation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedOrigins", "oauthOrigins", "externalLinks", "native"],
+      "properties": {
+        "allowedOrigins": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/httpsOrigin" }
+        },
+        "oauthOrigins": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/httpsOrigin" }
+        },
+        "externalLinks": { "enum": ["system", "block"] },
+        "native": { "$ref": "#/$defs/nativeNavigation" }
+      }
+    },
+    "capabilityToggle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "rationale": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500,
+          "pattern": "\\S"
+        }
+      },
+      "if": {
+        "properties": { "enabled": { "const": true } },
+        "required": ["enabled"]
+      },
+      "then": { "required": ["rationale"] }
+    },
+    "pushCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "rationale": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500,
+          "pattern": "\\S"
+        },
+        "tokenEndpoint": { "$ref": "#/$defs/httpsUrl" }
+      },
+      "if": {
+        "properties": { "enabled": { "const": true } },
+        "required": ["enabled"]
+      },
+      "then": { "required": ["rationale", "tokenEndpoint"] }
+    },
+    "fileCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "rationale": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500,
+          "pattern": "\\S"
+        },
+        "downloads": { "type": "boolean" },
+        "uploads": { "type": "boolean" }
+      },
+      "if": {
+        "properties": { "enabled": { "const": true } },
+        "required": ["enabled"]
+      },
+      "then": {
+        "required": ["rationale"],
+        "anyOf": [
+          {
+            "properties": { "downloads": { "const": true } },
+            "required": ["downloads"]
+          },
+          {
+            "properties": { "uploads": { "const": true } },
+            "required": ["uploads"]
+          }
+        ]
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "push",
+        "share",
+        "files",
+        "camera",
+        "microphone",
+        "location",
+        "notifications"
+      ],
+      "properties": {
+        "push": { "$ref": "#/$defs/pushCapability" },
+        "share": { "$ref": "#/$defs/capabilityToggle" },
+        "files": { "$ref": "#/$defs/fileCapability" },
+        "camera": { "$ref": "#/$defs/capabilityToggle" },
+        "microphone": { "$ref": "#/$defs/capabilityToggle" },
+        "location": { "$ref": "#/$defs/capabilityToggle" },
+        "notifications": { "$ref": "#/$defs/capabilityToggle" }
+      }
+    },
+    "signingReference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "androidTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minSdk", "targetApi", "formats"],
+      "properties": {
+        "minSdk": { "type": "integer", "minimum": 26, "maximum": 100 },
+        "targetApi": { "type": "integer", "minimum": 26, "maximum": 100 },
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["apk", "aab"] }
+        },
+        "signingReferenceId": { "$ref": "#/$defs/signingReference" }
+      }
+    },
+    "iosTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minVersion", "formats"],
+      "properties": {
+        "minVersion": { "$ref": "#/$defs/osVersion" },
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["xcode", "archive", "ipa"] }
+        },
+        "signingReferenceId": { "$ref": "#/$defs/signingReference" }
+      }
+    },
+    "windowsTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minVersion", "architectures", "formats"],
+      "properties": {
+        "minVersion": { "$ref": "#/$defs/osVersion" },
+        "architectures": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["x64", "arm64"] }
+        },
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["msix", "nsis"] }
+        },
+        "signingReferenceId": { "$ref": "#/$defs/signingReference" }
+      }
+    },
+    "macosTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minVersion", "architectures", "formats"],
+      "properties": {
+        "minVersion": { "$ref": "#/$defs/osVersion" },
+        "architectures": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["x64", "arm64", "universal"] }
+        },
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["app", "dmg"] }
+        },
+        "signingReferenceId": { "$ref": "#/$defs/signingReference" }
+      }
+    },
+    "linuxTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["architectures", "formats"],
+      "properties": {
+        "architectures": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["x64", "arm64"] }
+        },
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["appimage", "deb"] }
+        },
+        "signingReferenceId": { "$ref": "#/$defs/signingReference" }
+      }
+    },
+    "targets": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "android": { "$ref": "#/$defs/androidTarget" },
+        "ios": { "$ref": "#/$defs/iosTarget" },
+        "windows": { "$ref": "#/$defs/windowsTarget" },
+        "macos": { "$ref": "#/$defs/macosTarget" },
+        "linux": { "$ref": "#/$defs/linuxTarget" }
+      }
+    },
+    "compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "privacyPolicyUrl",
+        "supportUrl",
+        "dataPractices",
+        "ageRating"
+      ],
+      "properties": {
+        "privacyPolicyUrl": { "$ref": "#/$defs/httpsUrl" },
+        "supportUrl": { "$ref": "#/$defs/httpsUrl" },
+        "accountDeletionUrl": { "$ref": "#/$defs/httpsUrl" },
+        "dataPractices": {
+          "type": "array",
+          "maxItems": 9,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "account",
+              "contact",
+              "financial",
+              "health",
+              "location",
+              "identifiers",
+              "usage",
+              "diagnostics",
+              "user-content"
+            ]
+          }
+        },
+        "ageRating": { "enum": ["4+", "9+", "12+", "17+"] },
+        "reviewerNotes": { "type": "string", "maxLength": 4000 }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["channel", "updatePolicy"],
+      "properties": {
+        "channel": { "enum": ["internal", "beta", "stable"] },
+        "updatePolicy": { "enum": ["store", "signed-feed", "manual"] }
+      }
+    }
+  }
+}

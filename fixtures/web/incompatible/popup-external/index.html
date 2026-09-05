@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Popup fixture</title>
+  </head>
+  <body>
+    <main>
+      <h1>External navigation fixture</h1>
+      <p>Both actions are user-triggered and target reserved test domains.</p>
+      <p>
+        <a href="https://external.example.test/account"
+          >External same-window link</a
+        >
+      </p>
+      <button id="popup" type="button">Open test popup</button>
+    </main>
+    <script>
+      document.querySelector("#popup")?.addEventListener("click", () => {
+        window.open(
+          "https://popup-destination.example.test/help",
+          "_blank",
+          "noopener,noreferrer",
+        );
+      });
+    </script>
+  </body>
+</html>

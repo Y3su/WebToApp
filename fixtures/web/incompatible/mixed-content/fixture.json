@@ -1,0 +1,9 @@
+{
+  "name": "mixed-content",
+  "entrypoint": "index.html",
+  "serveAs": "https://mixed-content.example.test/",
+  "expected": {
+    "classification": "changes_required",
+    "observations": ["mixed_content"]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "archive-traversal-metadata",
+  "format": "synthetic-entry-list",
+  "input": "entries.json",
+  "expected": {
+    "classification": "unsupported",
+    "observations": [
+      "parent_traversal",
+      "absolute_path",
+      "windows_absolute_path",
+      "normalized_duplicate",
+      "symlink"
+    ]
+  }
+}

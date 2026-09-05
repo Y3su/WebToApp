@@ -1,0 +1,8 @@
+{
+  "name": "safe-public-app",
+  "entrypoint": "index.html",
+  "expected": {
+    "classification": "ready",
+    "observations": []
+  }
+}

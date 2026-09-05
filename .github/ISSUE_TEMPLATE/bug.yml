@@ -1,0 +1,38 @@
+name: Bug report
+description: Report a reproducible defect that is not security-sensitive.
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value:
+        Do not disclose vulnerabilities or customer data here. Use private
+        vulnerability reporting.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description:
+        Include safe fixtures and commands, with all credentials removed.
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Version or commit
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, architecture, runtime, WebView, and browser versions.
+    validations:
+      required: true

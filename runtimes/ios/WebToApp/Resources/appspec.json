@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0",
+  "identity": {
+    "displayName": "WebToApp Preview",
+    "slug": "example-portal",
+    "version": "1.0.0",
+    "buildNumber": 1,
+    "platformIdentifiers": {
+      "android": "com.example.portal",
+      "windows": "Example.Portal"
+    }
+  },
+  "source": { "kind": "url", "startUrl": "https://example.com" },
+  "ownership": {
+    "verifiedDomains": ["example.com"],
+    "verificationRecordIds": ["verify_01JEXAMPLE"]
+  },
+  "branding": {
+    "primaryColor": "#6750A4",
+    "backgroundColor": "#FFFFFF",
+    "iconUrl": "https://example.com/assets/icon.png",
+    "splash": {
+      "backgroundColor": "#FFFFFF",
+      "imageUrl": "https://example.com/assets/splash.png"
+    }
+  },
+  "navigation": {
+    "allowedOrigins": ["https://example.com"],
+    "oauthOrigins": ["https://accounts.google.com"],
+    "externalLinks": "system",
+    "native": { "mode": "none", "items": [] }
+  },
+  "capabilities": {
+    "push": { "enabled": false },
+    "share": { "enabled": false },
+    "files": { "enabled": false },
+    "camera": { "enabled": false },
+    "microphone": { "enabled": false },
+    "location": { "enabled": false },
+    "notifications": { "enabled": false }
+  },
+  "targets": {
+    "android": { "minSdk": 26, "targetApi": 36, "formats": ["apk", "aab"] },
+    "windows": {
+      "minVersion": "10.0.17763",
+      "architectures": ["x64", "arm64"],
+      "formats": ["msix", "nsis"]
+    }
+  },
+  "compliance": {
+    "privacyPolicyUrl": "https://example.com/privacy",
+    "supportUrl": "https://example.com/support",
+    "accountDeletionUrl": "https://example.com/account/delete",
+    "dataPractices": ["account", "contact", "usage"],
+    "ageRating": "4+",
+    "reviewerNotes": "Use the supplied review account to test authenticated functionality."
+  },
+  "release": { "channel": "internal", "updatePolicy": "manual" }
+}

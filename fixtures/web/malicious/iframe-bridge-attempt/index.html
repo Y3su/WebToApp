@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Iframe bridge fixture</title>
+  </head>
+  <body>
+    <h1>Main-frame enforcement fixture</h1>
+    <p id="result">No child-frame message observed.</p>
+    <iframe
+      src="./untrusted-frame.html"
+      title="Untrusted fixture frame"
+    ></iframe>
+    <script>
+      window.addEventListener("message", (event) => {
+        if (
+          event.origin === location.origin &&
+          event.data?.fixture === "bridge-attempt"
+        ) {
+          document.querySelector("#result").textContent =
+            "A bridge-shaped child-frame message was observed and must be ignored.";
+        }
+      });
+    </script>
+  </body>
+</html>

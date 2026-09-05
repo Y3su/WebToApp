@@ -1,0 +1,27 @@
+{
+  "name": "@webtoapp/analyzer",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "ipaddr.js": "2.2.0",
+    "yauzl": "3.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "@types/yauzl": "^2.10.3",
+    "vitest": "^3.2.4",
+    "typescript": "^5.9.2"
+  }
+}

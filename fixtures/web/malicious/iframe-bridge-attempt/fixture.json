@@ -1,0 +1,9 @@
+{
+  "name": "iframe-bridge-attempt",
+  "entrypoint": "index.html",
+  "serveAs": "https://iframe.example.test/",
+  "expected": {
+    "classification": "unsupported",
+    "observations": ["subframe_bridge_attempt"]
+  }
+}

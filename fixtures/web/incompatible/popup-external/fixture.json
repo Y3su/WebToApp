@@ -1,0 +1,9 @@
+{
+  "name": "popup-and-external-navigation",
+  "entrypoint": "index.html",
+  "serveAs": "https://popup.example.test/",
+  "expected": {
+    "classification": "changes_required",
+    "observations": ["new_window", "external_navigation"]
+  }
+}

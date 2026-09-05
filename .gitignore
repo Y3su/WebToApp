@@ -1,0 +1,51 @@
+# JavaScript
+node_modules/
+.next/
+.turbo/
+coverage/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Rust
+target/
+runtimes/desktop/src-tauri/gen/
+*.xcodeproj/
+local.properties
+
+# Native build outputs
+.gradle/
+build/
+DerivedData/
+*.xcarchive/
+*.apk
+*.aab
+*.ipa
+*.dmg
+*.msix
+*.AppImage
+
+# Secrets and customer material
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.mobileprovision
+*.cer
+*.key
+customer-data/
+artifacts/
+
+# Local services and tools
+.minio/
+.postgres/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+temp/
