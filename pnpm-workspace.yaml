@@ -9,3 +9,7 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - hono@4.13.7
+
+# Drizzle's legacy ESM loader otherwise retains a vulnerable esbuild server.
+overrides:
+  "@esbuild-kit/core-utils>esbuild": "0.25.12"

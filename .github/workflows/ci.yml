@@ -29,7 +29,9 @@ jobs:
       - run: pnpm check
       - run: pnpm build
       - run: pnpm test:contract
+      - run: node --test tooling/scripts/*.test.mjs
       - run: node tooling/scripts/check-licenses.mjs
+      - run: pnpm audit --audit-level moderate
 
   rust:
     name: rust (${{ matrix.os }})
