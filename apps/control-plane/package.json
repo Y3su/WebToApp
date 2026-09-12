@@ -16,13 +16,13 @@
   "dependencies": {
     "@webtoapp/app-spec": "workspace:*",
     "@webtoapp/policy-engine": "workspace:*",
-    "better-auth": "1.7.2",
+    "better-auth": "1.7.3",
     "drizzle-orm": "0.45.2",
     "hono": "4.13.7",
     "next": "16.3.4",
     "postgres": "3.4.9",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
     "zod": "4.5.4"
   },
   "devDependencies": {
