@@ -26,7 +26,7 @@ thiserror = "2"
 url = { version = "2", features = ["serde"] }
 
 [target.'cfg(windows)'.dependencies]
-webview2-com = "=0.38.2"
+webview2-com = "=0.39.1"
 
 [lints.rust]
 unsafe_code = "deny"
