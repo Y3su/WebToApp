@@ -150,6 +150,18 @@ public endpoint. ZIP inspection streams and verifies contents without
 extraction. See [the analyzer](../packages/analyzer/README.md) for enforced
 limits.
 
+Offline CLI analysis likewise treats AppSpec ownership fields as claims, not
+authenticated verification records. It always returns a missing-evidence finding
+and cannot mark a release ready. HTTPS fetch regression tests mock the transport
+to verify pinned DNS, rebinding rejection, redirect limits, response bounds and
+TLS failure propagation without external network traffic.
+
+CLI file access rejects existing symlink/reparse-point ancestors, not only the
+final path. These local checks are not a filesystem sandbox against another OS
+user concurrently replacing directories between validation and access. Customer
+runner workspaces must be private to the runner identity; descriptor-relative
+sandboxing and adversarial race tests remain runner hardening work.
+
 Database isolation tests run PostgreSQL through PGlite with a non-superuser
 role, including unset-tenant access and cross-tenant foreign-key attempts.
 Production auth/session scoping and worker roles remain unimplemented. Do not

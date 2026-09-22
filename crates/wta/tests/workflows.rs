@@ -1,6 +1,8 @@
 use std::fs;
 
-use tempfile::tempdir;
+fn tempdir() -> std::io::Result<tempfile::TempDir> {
+    tempfile::tempdir_in(fs::canonicalize(std::env::temp_dir())?)
+}
 
 #[test]
 fn init_works_with_its_default_relative_output() {
@@ -152,4 +154,23 @@ fn artifact_verify_fails_on_digest_mismatch() {
     ])
     .unwrap_err();
     assert_eq!(error.exit_code(), 5);
+}
+
+#[test]
+fn offline_analysis_never_treats_claimed_ownership_as_release_evidence() {
+    for fixture in ["url-app.json", "static-app.json"] {
+        let spec = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../packages/app-spec/examples")
+            .join(fixture)
+            .canonicalize()
+            .unwrap();
+        let output = wta::execute(["wta", "analyze", spec.to_str().unwrap(), "--json"]).unwrap();
+        let report: serde_json::Value = serde_json::from_str(&output).unwrap();
+        assert_eq!(report["status"], "changes_required", "{fixture}");
+        assert!(report["findings"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|finding| { finding["code"] == "analysis.offline_evidence_missing" }));
+    }
 }
