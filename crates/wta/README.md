@@ -1,13 +1,19 @@
 # `wta` CLI and customer runner
 
 `wta` is the command-line foundation for WebToApp. It creates and validates the
-versioned `AppSpecV1` contract, performs offline policy analysis, emits an
-initial deterministic Windows developer manifest, and verifies artifact digests.
+versioned `AppSpecV1` contract, performs offline policy analysis, exports a
+deterministic Windows preview project or developer manifest, and verifies
+artifact digests.
 
 This alpha is deliberately honest about its boundaries:
 
 - `build --target windows-dev` creates an **unsigned JSON developer manifest**,
   not an executable or installer.
+- `build --target windows-project --acknowledge-preview` exports a standalone
+  restricted Tauri project with a frozen AppSpec. The CLI never runs dependency
+  installation, build commands or signing. The generated project can be compiled
+  on a Windows development machine into an unsigned executable, not an
+  installer.
 - `analyze` is offline. It checks HTTPS, exact-origin, reserved-address,
   ownership, native-value, and compliance invariants without fetching a website
   or resolving DNS. Ownership fields in a file are untrusted claims. The report
@@ -54,6 +60,46 @@ only for local development tests; do not fabricate verification records for a
 customer release. Security-sensitive inputs and outputs reject symbolic links
 and parent-directory traversal. AppSpec input is limited to 1 MiB, and artifact
 hashing is streamed in fixed-size chunks.
+
+## Standalone Windows preview
+
+From the repository root, export the development fixture into a new directory:
+
+```powershell
+cargo run --locked -p wta -- build packages/app-spec/examples/windows-preview.json --target windows-project --acknowledge-preview --output-dir temp/windows-preview
+cd temp/windows-preview
+pnpm install --frozen-lockfile
+pnpm typecheck
+pnpm desktop
+```
+
+Requires the pinned Node, pnpm and Rust toolchains, MSVC and WebView2. The
+output is
+`src-tauri/target/x86_64-pc-windows-msvc/debug/webtoapp-desktop-runtime.exe`,
+with its AppSpec resource beside it. Keep the resource directory together with
+the executable.
+
+This preview supports only HTTPS URL sources, Windows x64, the internal release
+channel, manual updates, blocked external links, no OAuth origins, no native
+navigation and no enabled capabilities. Other specifications fail before any
+output is written. Branding uses the generic preview icon; custom icon fetching
+and the requested installer formats are not implemented. Ownership claims in a
+local file do not authorize a release.
+
+The Windows shell denies WebView2 permission requests and downloads before
+remote navigation, and uses an in-private session without persistent cookies.
+File-input dialogs, subresources and full runtime permission behavior still need
+production policy and device testing; there is no general native API bridge.
+
+The output directory must not already exist, even when empty; `--force` is
+rejected. Export into a private local directory. A failed write can leave a
+partial new project; retry with another directory. Templates are compiled into
+the CLI, destination filenames and commands are fixed, and app metadata is JSON
+data. `wta.project.json` inventories file hashes and the canonical AppSpec
+digest; it is not signed provenance. Files are deterministic for the same spec
+and CLI build, but reproducible native binaries are not claimed. Third-party
+notices and license obligations must be reviewed before distributing any
+binaries.
 
 ## Exit codes
 

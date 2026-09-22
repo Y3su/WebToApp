@@ -156,6 +156,34 @@ and cannot mark a release ready. HTTPS fetch regression tests mock the transport
 to verify pinned DNS, rebinding rejection, redirect limits, response bounds and
 TLS failure propagation without external network traffic.
 
+The Windows project exporter is explicitly local-preview-only. It validates the
+AppSpec and the supported feature subset before creating a fresh output
+directory; it never replaces existing directories or invokes a process. Only
+compiled-in templates and fixed filenames/commands are emitted. App labels stay
+JSON data and never become a path or shell argument. The exported spec is a
+canonical snapshot, with a SHA-256 file inventory rather than signed provenance.
+The unsigned resource remains editable by the local user; this is not a release
+integrity mechanism. Installer generation, signing, ownership authorization and
+remote native capabilities remain unavailable. Dependency installation and
+native compilation are explicit actions on the customer's development machine.
+
+The Windows shell first creates a blank, hidden, in-private WebView. Remote
+navigation remains gated until a native WebView2 `PermissionRequested` handler
+is installed; it denies every request, including new permission kinds. Downloads
+and popups are denied. Setup failure exits without visiting the remote URL, and
+an error applying a permission denial aborts rather than falling through to a
+browser prompt. Persistent permission grants and cookies are not reused. The COM
+calls are confined to one documented Windows-only function; unsafe code is
+denied elsewhere. Tauri/WebView2 bindings are pinned together. Non-Windows
+desktop remote navigation fails closed until equivalent guards are implemented.
+See
+[Microsoft's permission event contract](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2permissionrequestedeventargs)
+and
+[Tauri's platform handle contract](https://docs.rs/tauri/2.11.5/tauri/webview/struct.PlatformWebview.html).
+Source guards and compilation do not replace adversarial WebView/device tests;
+ordinary browser file-input dialogs and subresource traffic require further
+policy work before production capability enforcement is complete.
+
 CLI file access rejects existing symlink/reparse-point ancestors, not only the
 final path. These local checks are not a filesystem sandbox against another OS
 user concurrently replacing directories between validation and access. Customer

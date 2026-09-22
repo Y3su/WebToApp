@@ -88,6 +88,8 @@ pub struct DoctorArgs {
 pub enum BuildTarget {
     /// Deterministic, unsigned Windows developer manifest (no executable yet).
     WindowsDev,
+    /// Export a standalone restricted Tauri project for an unsigned Windows preview.
+    WindowsProject,
 }
 
 #[derive(Debug, Args)]
@@ -107,6 +109,10 @@ pub struct BuildArgs {
     /// Replace an existing regular artifact. Symlinks are never followed.
     #[arg(long)]
     pub force: bool,
+
+    /// Acknowledge that windows-project is local-only and not release-authorized.
+    #[arg(long)]
+    pub acknowledge_preview: bool,
 
     /// Emit machine-readable JSON.
     #[arg(long)]

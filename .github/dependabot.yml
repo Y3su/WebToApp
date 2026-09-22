@@ -34,3 +34,11 @@ updates:
     groups:
       desktop-rust-dependencies:
         patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /runtimes/desktop/project-template
+    schedule:
+      interval: weekly
+    groups:
+      windows-project-tooling:
+        patterns: ["*"]

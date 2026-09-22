@@ -77,6 +77,21 @@ validator. No database or account setup is needed for this preview. Run
 `pnpm desktop:preview` to compile the unsigned Windows developer executable on a
 Windows host with MSVC and WebView2. Run `pnpm generate` after schema changes.
 
+To export an AppSpec into a standalone Windows project, start with the
+restricted preview fixture:
+
+```powershell
+cargo run --locked -p wta -- build packages/app-spec/examples/windows-preview.json --target windows-project --acknowledge-preview --output-dir temp/windows-preview
+cd temp/windows-preview
+pnpm install --frozen-lockfile
+pnpm desktop
+```
+
+This creates an unsigned, local-only executable with no native capabilities or
+installer. Read the [CLI guide](crates/wta/README.md#standalone-windows-preview)
+for supported inputs and limitations. Use only content you are authorized to
+package; the fixture is not release authorization.
+
 ## Security
 
 Do not open public issues for vulnerabilities. Follow [SECURITY.md](SECURITY.md)
