@@ -10,7 +10,9 @@ This alpha is deliberately honest about its boundaries:
   not an executable or installer.
 - `analyze` is offline. It checks HTTPS, exact-origin, reserved-address,
   ownership, native-value, and compliance invariants without fetching a website
-  or resolving DNS.
+  or resolving DNS. Ownership fields in a file are untrusted claims. The report
+  always requires independent ownership/source evidence and cannot approve a
+  release, even when the document is structurally valid.
 - `runner enroll` and `runner start` validate safe inputs and then fail with an
   explicit unsupported-operation error. They make no network request and write
   no credentials or state until authenticated enrollment, mTLS identity, signed
@@ -45,10 +47,13 @@ cargo run --manifest-path crates/wta/Cargo.toml -- artifact verify \
 cargo run --manifest-path crates/wta/Cargo.toml -- doctor
 ```
 
-`init` never overwrites an existing file unless `--force` is explicit.
-Security-sensitive inputs and outputs reject symbolic links and parent-directory
-traversal. AppSpec input is limited to 1 MiB, and artifact hashing is streamed
-in fixed-size chunks.
+`init` never overwrites an existing file unless `--force` is explicit. Its
+unverified draft intentionally fails full validation until ownership records are
+supplied by the future verification flow. Use the committed example fixtures
+only for local development tests; do not fabricate verification records for a
+customer release. Security-sensitive inputs and outputs reject symbolic links
+and parent-directory traversal. AppSpec input is limited to 1 MiB, and artifact
+hashing is streamed in fixed-size chunks.
 
 ## Exit codes
 

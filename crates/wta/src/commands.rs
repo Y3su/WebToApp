@@ -184,7 +184,13 @@ pub fn validate_spec(args: &SpecArgs) -> Result<String, CliError> {
 
 pub fn analyze(args: &AnalyzeArgs) -> Result<String, CliError> {
     let validated = ValidatedSpec::load(&args.spec)?;
-    let mut findings = Vec::new();
+    // A spec's ownership fields are claims, not independently authenticated
+    // verification records. Offline analysis must never approve a release.
+    let mut findings = vec![Finding::required(
+        "analysis.offline_evidence_missing",
+        "Offline analysis cannot authenticate ownership records or inspect source contents.",
+        "Complete trusted ownership verification and sandboxed source inspection before release.",
+    )];
 
     match &validated.spec.source {
         Source::Url { start_url } => {

@@ -21,7 +21,7 @@
   "devDependencies": {
     "@types/node": "^22.15.30",
     "@types/yauzl": "^2.10.3",
-    "vitest": "^3.2.4",
+    "vitest": "4.1.11",
     "typescript": "^5.9.2"
   }
 }

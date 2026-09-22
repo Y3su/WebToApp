@@ -176,14 +176,58 @@ fn reject_ambiguous_path(path: &Path) -> Result<(), CliError> {
             reason: "parent-directory traversal (`..`) is not accepted".into(),
         });
     }
+    // Check every existing ancestor, including dangling links. Checking only the
+    // final component permits a parent symlink/junction to redirect reads/writes.
+    let absolute = if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        std::env::current_dir()
+            .map_err(|source| CliError::Read {
+                path: path.to_path_buf(),
+                source,
+            })?
+            .join(path)
+    };
+    for ancestor in absolute.ancestors() {
+        match fs::symlink_metadata(ancestor) {
+            Ok(metadata) if is_link_or_reparse_point(&metadata) => {
+                return Err(CliError::UnsafePath {
+                    path: ancestor.to_path_buf(),
+                    reason: "symlink or reparse-point ancestors are not accepted".into(),
+                });
+            }
+            Ok(_) => {}
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(source) => {
+                return Err(CliError::Read {
+                    path: ancestor.to_path_buf(),
+                    source,
+                })
+            }
+        }
+    }
     Ok(())
+}
+
+fn is_link_or_reparse_point(metadata: &fs::Metadata) -> bool {
+    #[cfg(windows)]
+    {
+        use std::os::windows::fs::MetadataExt;
+        metadata.file_attributes() & 0x400 != 0 // FILE_ATTRIBUTE_REPARSE_POINT
+    }
+    #[cfg(not(windows))]
+    {
+        metadata.file_type().is_symlink()
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use std::path::Path;
 
-    use tempfile::tempdir;
+    fn tempdir() -> std::io::Result<tempfile::TempDir> {
+        tempfile::tempdir_in(std::fs::canonicalize(std::env::temp_dir())?)
+    }
 
     use super::{read_regular_file_limited, write_regular_file};
 
@@ -200,5 +244,25 @@ mod tests {
         write_regular_file(&path, b"first", false).unwrap();
         assert!(write_regular_file(&path, b"second", false).is_err());
         assert_eq!(read_regular_file_limited(&path, 32).unwrap(), b"first");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn rejects_symlink_ancestors_and_dangling_links() {
+        use std::{fs, os::unix::fs::symlink};
+        let directory = tempdir().unwrap();
+        let target = directory.path().join("target");
+        fs::create_dir(&target).unwrap();
+        fs::write(target.join("input.json"), b"{}").unwrap();
+        let link = directory.path().join("link");
+        symlink(&target, &link).unwrap();
+        assert!(read_regular_file_limited(&link.join("input.json"), 32).is_err());
+        assert!(write_regular_file(&link.join("output.json"), b"{}", false).is_err());
+        assert!(super::ensure_output_directory(&link.join("nested")).is_err());
+        assert!(!target.join("output.json").exists());
+        assert!(!target.join("nested").exists());
+        let dangling = directory.path().join("dangling");
+        symlink(directory.path().join("missing"), &dangling).unwrap();
+        assert!(write_regular_file(&dangling, b"{}", true).is_err());
     }
 }

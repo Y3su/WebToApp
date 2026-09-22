@@ -1,6 +1,6 @@
 # Dependency security follow-up
 
-Reviewed 2026-09-06 after the first public dependency scan.
+Reviewed 2026-09-06 after the first public dependency scan; updated 2026-09-12.
 
 - Updated the analyzer to yauzl 3.2.1, the patched release identified by GitHub
   for its off-by-one advisory. Archive regression tests remain mandatory.
@@ -11,6 +11,11 @@ Reviewed 2026-09-06 after the first public dependency scan.
 - `pnpm audit --audit-level moderate` reports no known vulnerabilities after
   these changes and now runs in CI. This is dependency-database evidence, not a
   proof of security.
+- The 2026-09-12 scan additionally reported
+  [GHSA-82fw-gwwq-j7x9](https://github.com/vitest-dev/vitest/security/advisories/GHSA-82fw-gwwq-j7x9)
+  in the four libraries using Vitest 3. All workspaces now use patched Vitest
+  4.1.11, which also satisfies Better Auth's test peer range (unlike Vitest 5).
+  No advisory is suppressed.
 - The license gate inspects installed package manifests, including installed
   optional native packages, rather than pnpm store indexes that can be absent on
   a fresh Linux runner. Unrecognized license expressions fail closed. Run on

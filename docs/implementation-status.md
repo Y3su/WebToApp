@@ -46,7 +46,7 @@ unfinished.
 
 | Milestone | Remaining gate                                                                               |
 | --------- | -------------------------------------------------------------------------------------------- |
-| M0        | Confirm first remote workflows and repository security settings                              |
+| M0        | Bootstrap complete; all PR #7 checks and repository protections verified                     |
 | M1        | Full supported/hostile analyzer matrix; connect customer AppSpecs to native build generation |
 | M2        | Android capabilities, signing, bundletool and emulator/device matrix                         |
 | M3        | Windows/Linux installers, native integrations and clean-VM lifecycle                         |
