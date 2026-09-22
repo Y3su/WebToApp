@@ -16,20 +16,20 @@
   "dependencies": {
     "@webtoapp/app-spec": "workspace:*",
     "@webtoapp/policy-engine": "workspace:*",
-    "better-auth": "1.7.2",
+    "better-auth": "1.7.5",
     "drizzle-orm": "0.45.2",
-    "hono": "4.13.7",
-    "next": "16.3.4",
+    "hono": "4.13.8",
+    "next": "16.3.5",
     "postgres": "3.4.9",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "zod": "4.5.4"
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.3.14",
     "@types/node": "^22.15.30",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "drizzle-kit": "^0.31.4",
     "eslint": "^9.35.0",
     "rimraf": "^6.0.1",
