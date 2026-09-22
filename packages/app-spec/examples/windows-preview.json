@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0",
+  "identity": {
+    "displayName": "WebToApp Windows Preview",
+    "slug": "windows-preview",
+    "version": "0.1.0",
+    "buildNumber": 1,
+    "platformIdentifiers": { "windows": "dev.webtoapp.preview" }
+  },
+  "source": { "kind": "url", "startUrl": "https://example.com" },
+  "ownership": {
+    "verifiedDomains": ["example.com"],
+    "verificationRecordIds": ["fixture-only-not-release-authorization"]
+  },
+  "branding": {
+    "primaryColor": "#6750A4",
+    "backgroundColor": "#FFFFFF",
+    "iconUrl": "https://example.com/favicon.ico"
+  },
+  "navigation": {
+    "allowedOrigins": ["https://example.com"],
+    "oauthOrigins": [],
+    "externalLinks": "block",
+    "native": { "mode": "none", "items": [] }
+  },
+  "capabilities": {
+    "push": { "enabled": false },
+    "share": { "enabled": false },
+    "files": { "enabled": false },
+    "camera": { "enabled": false },
+    "microphone": { "enabled": false },
+    "location": { "enabled": false },
+    "notifications": { "enabled": false }
+  },
+  "targets": {
+    "windows": {
+      "minVersion": "10",
+      "architectures": ["x64"],
+      "formats": ["nsis"]
+    }
+  },
+  "compliance": {
+    "privacyPolicyUrl": "https://example.com/privacy",
+    "supportUrl": "https://example.com/support",
+    "dataPractices": [],
+    "ageRating": "17+"
+  },
+  "release": { "channel": "internal", "updatePolicy": "manual" }
+}

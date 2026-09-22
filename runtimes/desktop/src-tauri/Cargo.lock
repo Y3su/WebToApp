@@ -3924,6 +3924,7 @@ dependencies = [
  "tauri-build",
  "thiserror 2.0.20",
  "url",
+ "webview2-com",
 ]
 
 [[package]]

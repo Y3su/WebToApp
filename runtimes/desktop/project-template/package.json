@@ -1,0 +1,23 @@
+{
+  "name": "webtoapp-local-preview",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22.15.1"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "desktop": "tauri build --debug --no-bundle --target x86_64-pc-windows-msvc -- --locked"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.11.4",
+    "@types/node": "22.20.1",
+    "typescript": "5.9.3",
+    "vite": "7.3.6"
+  }
+}

@@ -1,6 +1,13 @@
 mod config;
+mod permissions;
 
-use std::path::PathBuf;
+use std::{
+    path::PathBuf,
+    sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    },
+};
 
 use config::RuntimeSpec;
 use tauri::{Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
@@ -27,17 +34,47 @@ pub fn run() {
             let title = spec.identity.display_name.clone();
             let start_url = spec.start_url().clone();
 
-            WebviewWindowBuilder::new(app, "webapp", WebviewUrl::External(start_url))
-                .title(title)
-                .inner_size(1200.0, 800.0)
-                .on_navigation(move |candidate| spec.is_navigation_allowed(candidate))
-                .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
-                .build()?;
+            let ready = Arc::new(AtomicBool::new(false));
+            let navigation_ready = Arc::clone(&ready);
+            let window = WebviewWindowBuilder::new(
+                app,
+                "webapp",
+                WebviewUrl::External(url::Url::parse("about:blank")?),
+            )
+            .title(title)
+            .inner_size(1200.0, 800.0)
+            .visible(false)
+            // Never reuse an earlier browser permission grant or persistent cookies.
+            .incognito(true)
+            .on_navigation(move |candidate| {
+                candidate.as_str() == "about:blank"
+                    || (navigation_ready.load(Ordering::Acquire)
+                        && spec.is_navigation_allowed(candidate))
+            })
+            .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
+            .on_download(|_, _| false)
+            .build()?;
 
-            if let Some(shell) = app.get_webview_window("main") {
-                shell.emit("webtoapp://runtime-ready", ())?;
-                shell.hide()?;
-            }
+            let remote = window.clone();
+            window.with_webview(move |platform| {
+                if permissions::install_preview_policy(&platform).is_err() {
+                    remote.app_handle().exit(1);
+                    return;
+                }
+                ready.store(true, Ordering::Release);
+                if remote
+                    .navigate(start_url)
+                    .and_then(|()| remote.show())
+                    .is_err()
+                {
+                    remote.app_handle().exit(1);
+                    return;
+                }
+                if let Some(shell) = remote.app_handle().get_webview_window("main") {
+                    let _ = shell.emit("webtoapp://runtime-ready", ());
+                    let _ = shell.hide();
+                }
+            })?;
             Ok(())
         })
         .run(tauri::generate_context!())

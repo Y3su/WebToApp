@@ -17,7 +17,11 @@ const cli = resolve(
   "target/debug",
   process.platform === "win32" ? "wta.exe" : "wta",
 );
-for (const name of ["url-app.json", "static-app.json"]) {
+for (const name of [
+  "url-app.json",
+  "static-app.json",
+  "windows-preview.json",
+]) {
   const path = resolve(root, "packages/app-spec/examples", name);
   const spec = parseAppSpec(JSON.parse(readFileSync(path, "utf8")));
   const result = JSON.parse(

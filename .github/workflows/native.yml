@@ -36,8 +36,35 @@ jobs:
           cargo test --locked --manifest-path
           runtimes/desktop/src-tauri/Cargo.toml
       - run:
-          pnpm --filter @webtoapp/desktop-runtime exec tauri build --debug
-          --no-bundle
+          cargo run --locked -p wta -- build
+          packages/app-spec/examples/windows-preview.json --target
+          windows-project --acknowledge-preview --output-dir
+          temp/windows-project
+      - run: pnpm install --frozen-lockfile
+        working-directory: temp/windows-project
+      - run: pnpm typecheck
+        working-directory: temp/windows-project
+      - run: pnpm audit --audit-level moderate
+        working-directory: temp/windows-project
+      - name: Check exported project dependency licenses
+        run: >-
+          node --input-type=module -e "import {collectLicenses, checkLicenses}
+          from './tooling/scripts/check-licenses.mjs';
+          checkLicenses(collectLicenses('temp/windows-project/node_modules/.pnpm'));"
+      - run: pnpm desktop
+        working-directory: temp/windows-project
+        env:
+          CARGO_TARGET_DIR:
+            ${{ github.workspace }}/runtimes/desktop/src-tauri/target
+      - name: Verify unsigned executable and frozen resource
+        shell: pwsh
+        run: |
+          $output = 'runtimes/desktop/src-tauri/target/x86_64-pc-windows-msvc/debug'
+          $manifest = Get-Content temp/windows-project/wta.project.json -Raw | ConvertFrom-Json
+          $digest = (Get-FileHash "$output/resources/appspec.json" -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($digest -ne $manifest.appSpecSha256) { throw 'Bundled AppSpec digest mismatch' }
+          $signature = Get-AuthenticodeSignature "$output/webtoapp-desktop-runtime.exe"
+          if ($signature.Status -ne 'NotSigned') { throw 'Preview must be unsigned' }
   android:
     name: Android shell
     runs-on: ubuntu-latest

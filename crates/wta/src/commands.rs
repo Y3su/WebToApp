@@ -307,7 +307,7 @@ pub fn doctor(args: &DoctorArgs) -> Result<String, CliError> {
     });
     checks.push(DoctorCheck::warning(
         "packaging",
-        "this release emits a Windows developer manifest only; installers and signing are not connected"
+        "Windows outputs are an unsigned developer manifest or a restricted local preview project; installers and signing are not connected"
             .into(),
     ));
 
@@ -345,6 +345,7 @@ pub fn build(args: &BuildArgs) -> Result<String, CliError> {
     let validated = ValidatedSpec::load(&args.spec)?;
     match args.target {
         BuildTarget::WindowsDev => build_windows_developer_manifest(&validated, args),
+        BuildTarget::WindowsProject => crate::project::export_windows(&validated, args),
     }
 }
 

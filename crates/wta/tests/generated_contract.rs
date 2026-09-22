@@ -8,6 +8,7 @@ fn generated_rust_model_decodes_canonical_examples() {
     for content in [
         include_str!("../../../packages/app-spec/examples/url-app.json"),
         include_str!("../../../packages/app-spec/examples/static-app.json"),
+        include_str!("../../../packages/app-spec/examples/windows-preview.json"),
     ] {
         let spec: generated::AppSpecV1 = serde_json::from_str(content).unwrap();
         assert_eq!(serde_json::to_value(spec.schema_version).unwrap(), "1.0");
