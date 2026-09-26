@@ -15,9 +15,9 @@
     "desktop": "tauri build --debug --no-bundle --target x86_64-pc-windows-msvc -- --locked"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "2.11.4",
-    "@types/node": "22.20.1",
-    "typescript": "5.9.3",
-    "vite": "7.3.6"
+    "@tauri-apps/cli": "2.11.5",
+    "@types/node": "26.6.2",
+    "typescript": "7.0.2",
+    "vite": "8.3.0"
   }
 }
