@@ -19,9 +19,9 @@
     "yauzl": "3.2.1"
   },
   "devDependencies": {
-    "@types/node": "^22.15.30",
+    "@types/node": "^26.6.2",
     "@types/yauzl": "^2.10.3",
-    "vitest": "4.1.11",
-    "typescript": "^5.9.2"
+    "vitest": "5.0.1",
+    "typescript": "^7.0.2"
   }
 }
