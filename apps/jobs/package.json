@@ -14,8 +14,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "graphile-worker": "0.17.3",
-    "postgres": "3.4.9"
+    "graphile-worker": "0.18.0",
+    "postgres": "4.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.15.30",
