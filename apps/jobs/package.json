@@ -18,11 +18,11 @@
     "postgres": "3.4.9"
   },
   "devDependencies": {
-    "@types/node": "^22.15.30",
-    "eslint": "^9.35.0",
-    "rimraf": "^6.0.1",
-    "tsx": "^4.20.5",
-    "typescript": "^5.9.2",
-    "vitest": "4.1.11"
+    "@types/node": "^26.6.6",
+    "eslint": "^10.14.0",
+    "rimraf": "^6.1.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "5.1.0"
   }
 }
